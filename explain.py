@@ -81,7 +81,8 @@ shap.plots.beeswarm(shap_values)
 
 # %%
 # comparable to the bar plot
-shap.plots.beeswarm(shap_values.abs, color="shap_red")
+shap.plots.beeswarm(shap_values.abs, color="shap_red") 
+# the lines more spread apart shows it is very useful to predict the person's values
 
 # %%
 # combine the above charts
