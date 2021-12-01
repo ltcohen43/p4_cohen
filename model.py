@@ -16,7 +16,7 @@
 # Building our model
 import pandas as pd
 import numpy as np
-import joblib # to savel ml models
+import joblib # to save ml models
 from plotnine import *
 
 from sklearn import metrics
