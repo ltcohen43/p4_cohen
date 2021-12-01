@@ -67,6 +67,18 @@ preds_nb %>% metrics_calc(truth, estimate = .pred_class)
 
 preds_bt %>% roc_curve(truth, estimate = .pred_before) %>% autoplot()
 
+preds_nb %>% roc_curve(truth, estimate = .pred_before) %>% autoplot()
+
+preds_logistic %>% roc_curve(truth, estimate = .pred_before) %>% autoplot()
+
+preds_all <- bind_rows(
+    mutate(preds_nb, model = "Naive Bayes"),
+    mutate(preds_bt, model = "Boosted Tree"),
+    mutate(preds_logistic, model = "Logistic Regression")
+)
+
+#preds_all %>% roc_curve(truth, estimate = .pred_before) %>% autoplot()
+
 conf_mat()
 metrics()
 precision()
