@@ -1,4 +1,4 @@
-# Project 5: Making predictions
+# Project 4: Making predictions
 
 The clean air act of 1970 was the beginning of the end for asbestos in homebuilding. By 1976, the U.S. Environmental Protection Agency (EPA) was given authority to restrict asbestos in paint. Homes built during and before this period are known to have materials with asbestos https://www.asbestos.com/mesothelioma-lawyer/legislation/ban/.
 
