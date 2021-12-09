@@ -33,8 +33,8 @@ nb_model <- discrim::naive_Bayes() %>%
     set_mode("classification") %>%
     fit(before1980 ~ ., data = dat_train)
 
-(vip(bt_model, num_features = 20) + labs(title= "boosted")) +
-(vip(logistic_model, num_features = 20)+ labs(title = "logistic"))
+(vip(bt_model, num_features = 20) + labs(title = "boosted")) +
+(vip(logistic_model, num_features = 20) + labs(title = "logistic"))
 
 preds_logistic <- bind_cols(
     predict(logistic_model, new_data = dat_test),
@@ -42,7 +42,13 @@ preds_logistic <- bind_cols(
     truth = pull(dat_test, before1980)
   )
 
-# takes a minute
+
+preds_logistic <- bind_cols(
+    predict(logistic_model, new_data = dat_test),
+    predict(logistic_model, dat_test, type = "prob"),
+    truth = pull(dat_test, before1980)
+  )
+
 preds_nb <- bind_cols(
     predict(nb_model, new_data = dat_test),
     predict(nb_model, dat_test, type = "prob"),
@@ -59,17 +65,24 @@ preds_bt %>% conf_mat(truth, .pred_class)
 preds_nb %>% conf_mat(truth, .pred_class)
 preds_logistic %>% conf_mat(truth, .pred_class)
 
+preds_bt %>% metrics(truth, .pred_class)
+
 metrics_calc <- metric_set(accuracy, bal_accuracy, precision, recall, f_meas)
 
-preds_bt %>% metrics_calc(truth, estimate = .pred_class)
+preds_bt %>%
+    metrics_calc(truth, estimate = .pred_class)
 
-preds_nb %>% metrics_calc(truth, estimate = .pred_class)
+preds_nb %>%
+    metrics_calc(truth, estimate = .pred_class)
 
-preds_bt %>% roc_curve(truth, estimate = .pred_before) %>% autoplot()
+preds_bt %>%
+    roc_curve(truth, estimate = .pred_before) %>%
+    autoplot()
 
-preds_nb %>% roc_curve(truth, estimate = .pred_before) %>% autoplot()
+preds_nb %>%
+    roc_curve(truth, estimate = .pred_before) %>%
+    autoplot()
 
-preds_logistic %>% roc_curve(truth, estimate = .pred_before) %>% autoplot()
 
 preds_all <- bind_rows(
     mutate(preds_nb, model = "Naive Bayes"),
@@ -77,11 +90,57 @@ preds_all <- bind_rows(
     mutate(preds_logistic, model = "Logistic Regression")
 )
 
-#preds_all %>% roc_curve(truth, estimate = .pred_before) %>% autoplot()
+preds_all %>%
+    group_by(model) %>%
+    roc_curve(truth, estimate = .pred_before) %>%
+    autoplot()
 
-conf_mat()
-metrics()
-precision()
-metric_set()
-roc_curve()
-autoplot()
+preds_all %>%
+    group_by(model) %>%
+    metrics_calc(truth, estimate = .pred_class) %>%
+    pivot_wider(names_from = .metric, values_from = .estimate)
+
+
+# # takes a minute
+# preds_nb <- bind_cols(
+#     predict(nb_model, new_data = dat_test),
+#     predict(nb_model, dat_test, type = "prob"),
+#     truth = pull(dat_test, before1980)
+#   )
+
+# preds_bt <- bind_cols(
+#     predict(bt_model, new_data = dat_test),
+#     predict(bt_model, dat_test, type = "prob"),
+#     truth = pull(dat_test, before1980)
+#   )
+
+# preds_bt %>% conf_mat(truth, .pred_class)
+# preds_nb %>% conf_mat(truth, .pred_class)
+# preds_logistic %>% conf_mat(truth, .pred_class)
+
+# metrics_calc <- metric_set(accuracy, bal_accuracy, precision, recall, f_meas)
+
+# preds_bt %>% metrics_calc(truth, estimate = .pred_class)
+
+# preds_nb %>% metrics_calc(truth, estimate = .pred_class)
+
+# preds_bt %>% roc_curve(truth, estimate = .pred_before) %>% autoplot()
+
+# preds_nb %>% roc_curve(truth, estimate = .pred_before) %>% autoplot()
+
+# preds_logistic %>% roc_curve(truth, estimate = .pred_before) %>% autoplot()
+
+# preds_all <- bind_rows(
+#     mutate(preds_nb, model = "Naive Bayes"),
+#     mutate(preds_bt, model = "Boosted Tree"),
+#     mutate(preds_logistic, model = "Logistic Regression")
+# )
+
+# #preds_all %>% roc_curve(truth, estimate = .pred_before) %>% autoplot()
+
+# conf_mat()
+# metrics()
+# precision()
+# metric_set()
+# roc_curve()
+# autoplot()

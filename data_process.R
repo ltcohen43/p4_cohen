@@ -32,7 +32,7 @@ dat <- read_csv("SalesBook_2013.csv") %>%
     # quality case_when
     quality = case_when(
         quality == "E-" ~ -0.3, quality == "E" ~ 0,
-        quality == "E+" ~ 0.3, quality == "D-" ~ 0.7, 
+        quality == "E+" ~ 0.3, quality == "D-" ~ 0.7,
         quality == "D" ~ 1, quality == "D+" ~ 1.3,
         quality == "C-" ~ 1.7, quality == "C" ~ 2,
         quality == "C+" ~ 2.3, quality == "B-" ~ 2.7,
@@ -55,7 +55,7 @@ dat <- read_csv("SalesBook_2013.csv") %>%
     detachedGarage = gartype %>% str_to_lower() %>% str_detect("det") %>% as.numeric(), # nolint
     carportGarage = gartype %>% str_to_lower() %>% str_detect("cp") %>% as.numeric(), # nolint
     noGarage = gartype %>% str_to_lower() %>% str_detect("none") %>% as.numeric() # nolint
-    ) %>% 
+    ) %>%
     arrange(parcel, syear, smonth) %>%
     group_by(parcel) %>%
     slice(1) %>% # take the first one in each group
